@@ -1,0 +1,23 @@
+## Set working directory and download + unzip data file. This code is not included here. 
+## This code assumes that the data file is available in current directory
+
+## build column names vector
+ColNames <- c("Date","Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3")
+
+
+## Read the data file
+data.file <- read.table("household_power_consumption.txt",sep=";",header = TRUE, na.strings = "?",col.names = ColNames)
+
+## Subset the data frame for data between two dates
+data.analysis <- data.file[data.file$Date %in% c("1/2/2007","2/2/2007"),]
+
+##build the date and time variable and plot the graph
+dateandtime <- strptime(paste(data.analysis$Date,data.analysis$Time, sep=" "),"%d/%m/%Y %H:%M:%S")
+dateandtime <- na.omit(dateandtime)
+data.analysis$dateandtime <- as.POSIXct(dateandtime)
+
+png(file = "plot2.png",width=480,height=480)
+
+plot(data.analysis$dateandtime,data.analysis$Global_active_power,type="l",xlab="",ylab="Global Active Power(Kilowatts)")
+
+dev.off()
